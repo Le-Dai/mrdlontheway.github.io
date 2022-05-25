@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DaiLe" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介Hive 是一个构建在 Hadoop 之上的数据仓库，它可以将结构化的数据文件映射成表，并提供类 SQL 查询功能，用于查询的 SQL 语句会被转化为 MapReduce or tez 作业，然后提交到 Hadoop 上运行。 特点： 1.简单、容易上手 (提供了类似 sql 的查询语言 hql)，使得精通 sql 但是不了解 Java 编程的人也能很好地进行大数据分析；2.灵活性高，可以自定">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DaiLe&#39;s blog">
+<meta property="og:url" content="https://mrdlontheway.github.io/docs/bigdata/hive.html">
+<meta property="og:site_name" content="DaiLe&#39;s blog">
+<meta property="og:description" content="简介Hive 是一个构建在 Hadoop 之上的数据仓库，它可以将结构化的数据文件映射成表，并提供类 SQL 查询功能，用于查询的 SQL 语句会被转化为 MapReduce or tez 作业，然后提交到 Hadoop 上运行。 特点： 1.简单、容易上手 (提供了类似 sql 的查询语言 hql)，使得精通 sql 但是不了解 Java 编程的人也能很好地进行大数据分析；2.灵活性高，可以自定">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/hive-data-type.png">
+<meta property="og:updated_time" content="2022-05-25T02:38:43.799Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DaiLe&#39;s blog">
+<meta name="twitter:description" content="简介Hive 是一个构建在 Hadoop 之上的数据仓库，它可以将结构化的数据文件映射成表，并提供类 SQL 查询功能，用于查询的 SQL 语句会被转化为 MapReduce or tez 作业，然后提交到 Hadoop 上运行。 特点： 1.简单、容易上手 (提供了类似 sql 的查询语言 hql)，使得精通 sql 但是不了解 Java 编程的人也能很好地进行大数据分析；2.灵活性高，可以自定">
+<meta name="twitter:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/hive-data-type.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://mrdlontheway.github.io/docs/bigdata/hive.html"/>
+
+
+
+
+
+  <title> | DaiLe's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">DaiLe's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-docs">
+          <a href="/docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-docs"></i> <br />
+            
+            docs
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-resume">
+          <a href="/resume" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-resume"></i> <br />
+            
+            resume
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline"></h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Hive 是一个构建在 Hadoop 之上的数据仓库，它可以将结构化的数据文件映射成表，并提供类 SQL 查询功能，用于查询的 SQL 语句会被转化为 MapReduce or tez 作业，然后提交到 Hadoop 上运行。</p>
+<p>特点：</p>
+<p>1.简单、容易上手 (提供了类似 sql 的查询语言 hql)，使得精通 sql 但是不了解 Java 编程的人也能很好地进行大数据分析；<br>2.灵活性高，可以自定义用户函数 (UDF) 和存储格式；<br>3.为超大的数据集设计的计算和存储能力，集群扩展容易;<br>4.统一的元数据管理，可与 presto／impala／sparksql 等共享数据；<br>5.执行延迟高，不适合做数据的实时处理，但适合做海量数据的离线处理。  </p>
+<h2 id="Hive的体系架构"><a href="#Hive的体系架构" class="headerlink" title="Hive的体系架构"></a>Hive的体系架构</h2><h3 id="连接方式"><a href="#连接方式" class="headerlink" title="连接方式"></a>连接方式</h3><p>可以用 command-line shell 和 thrift／jdbc 两种方式来操作数据：</p>
+<p>1.command-line shell：通过 hive 命令行的的方式来操作数据；<br>2.thrift／jdbc：通过 thrift 协议按照标准的 JDBC 的方式操作数据。  </p>
+<h3 id="Metastore-元数据schema-存储"><a href="#Metastore-元数据schema-存储" class="headerlink" title="Metastore 元数据schema 存储"></a>Metastore 元数据schema 存储</h3><p> Hive 中，表名、表结构、字段名、字段类型、表的分隔符等统一被称为元数据。所有的元数据默认存储在 Hive 内置的 derby 数据库中，但由于 derby 只能有一个实例，也就是说不能有多个命令行客户端同时访问，所以在实际生产环境中，通常使用 MySQL 代替 derby。</p>
+<p>Hive 进行的是统一的元数据管理，就是说你在 Hive 上创建了一张表，然后在 presto／impala／sparksql 中都是可以直接使用的，它们会从 Metastore 中获取统一的元数据信息，同样的你在 presto／impala／sparksql 中创建一张表，在 Hive 中也可以直接使用。</p>
+<h3 id="HQL的执行流程"><a href="#HQL的执行流程" class="headerlink" title="HQL的执行流程"></a>HQL的执行流程</h3><p>Hive 在执行一条 HQL 的时候，会经过以下步骤：</p>
+<p>1.语法解析：Antlr 定义 SQL 的语法规则，完成 SQL 词法，语法解析，将 SQL 转化为抽象 语法树 AST Tree；<br>2.语义解析：遍历 AST Tree，抽象出查询的基本组成单元 QueryBlock；<br>3.生成逻辑执行计划：遍历 QueryBlock，翻译为执行操作树 OperatorTree；<br>4.优化逻辑执行计划：逻辑层优化器进行 OperatorTree 变换，合并不必要的 ReduceSinkOperator，减少 shuffle 数据量；<br>5.生成物理执行计划：遍历 OperatorTree，翻译为 MapReduce 任务；<br>6.优化物理执行计划：物理层优化器进行 MapReduce 任务的变换，生成最终的执行计划。  </p>
+<p>关于 Hive SQL 的详细执行流程可以参考美团技术团队的文章：Hive SQL 的编译过程 <a href="https://tech.meituan.com/2014/02/12/hive-sql-to-mapreduce.html" target="_blank" rel="noopener">https://tech.meituan.com/2014/02/12/hive-sql-to-mapreduce.html</a></p>
+<h2 id="三、数据类型"><a href="#三、数据类型" class="headerlink" title="三、数据类型"></a>三、数据类型</h2><h3 id="3-1-基本数据类型"><a href="#3-1-基本数据类型" class="headerlink" title="3.1 基本数据类型"></a>3.1 基本数据类型</h3><p>Hive 表中的列支持以下基本数据类型：</p>
+<table>
+<thead>
+<tr>
+<th>大类</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Integers（整型）</strong></td>
+<td>TINYINT—1 字节的有符号整数 <br>SMALLINT—2 字节的有符号整数<br> INT—4 字节的有符号整数<br> BIGINT—8 字节的有符号整数</td>
+</tr>
+<tr>
+<td><strong>Boolean（布尔型）</strong></td>
+<td>BOOLEAN—TRUE/FALSE</td>
+</tr>
+<tr>
+<td><strong>Floating point numbers（浮点型）</strong></td>
+<td>FLOAT— 单精度浮点型 <br>DOUBLE—双精度浮点型</td>
+</tr>
+<tr>
+<td><strong>Fixed point numbers（定点数）</strong></td>
+<td>DECIMAL—用户自定义精度定点数，比如 DECIMAL(7,2)</td>
+</tr>
+<tr>
+<td><strong>String types（字符串）</strong></td>
+<td>STRING—指定字符集的字符序列<br> VARCHAR—具有最大长度限制的字符序列 <br>CHAR—固定长度的字符序列</td>
+</tr>
+<tr>
+<td><strong>Date and time types（日期时间类型）</strong></td>
+<td>TIMESTAMP —  时间戳 <br>TIMESTAMP WITH LOCAL TIME ZONE — 时间戳，纳秒精度<br> DATE—日期类型</td>
+</tr>
+<tr>
+<td><strong>Binary types（二进制类型）</strong></td>
+<td>BINARY—字节序列</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>TIMESTAMP 和 TIMESTAMP WITH LOCAL TIME ZONE 的区别如下：</p>
+<ul>
+<li><strong>TIMESTAMP WITH LOCAL TIME ZONE</strong>：用户提交时间给数据库时，会被转换成数据库所在的时区来保存。查询时则按照查询客户端的不同，转换为查询客户端所在时区的时间。</li>
+<li><strong>TIMESTAMP</strong> ：提交什么时间就保存什么时间，查询时也不做任何转换。</li>
+</ul>
+</blockquote>
+<h3 id="3-2-隐式转换"><a href="#3-2-隐式转换" class="headerlink" title="3.2 隐式转换"></a>3.2 隐式转换</h3><p>Hive 中基本数据类型遵循以下的层次结构，按照这个层次结构，子类型到祖先类型允许隐式转换。例如 INT 类型的数据允许隐式转换为 BIGINT 类型。额外注意的是：按照类型层次结构允许将 STRING 类型隐式转换为 DOUBLE 类型。</p>
+<div align="center"> <img src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/hive-data-type.png"> </div>
+
+
+
+
+<h3 id="3-4-示例"><a href="#3-4-示例" class="headerlink" title="3.4 示例"></a>3.4 示例</h3><p>如下给出一个基本数据类型和复杂数据类型的使用示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> students(</span><br><span class="line">  <span class="keyword">name</span>      <span class="keyword">STRING</span>,   <span class="comment">-- 姓名</span></span><br><span class="line">  age       <span class="built_in">INT</span>,      <span class="comment">-- 年龄</span></span><br><span class="line">  subject   <span class="built_in">ARRAY</span>&lt;<span class="keyword">STRING</span>&gt;,   <span class="comment">--学科</span></span><br><span class="line">  score     <span class="keyword">MAP</span>&lt;<span class="keyword">STRING</span>,<span class="built_in">FLOAT</span>&gt;,  <span class="comment">--各个学科考试成绩</span></span><br><span class="line">  address   <span class="keyword">STRUCT</span>&lt;houseNumber:<span class="built_in">int</span>, street:<span class="keyword">STRING</span>, city:<span class="keyword">STRING</span>, province：<span class="keyword">STRING</span>&gt;  <span class="comment">--家庭居住地址</span></span><br><span class="line">) <span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">"\t"</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="四、内容格式"><a href="#四、内容格式" class="headerlink" title="四、内容格式"></a>四、内容格式</h2><p>当数据存储在文本文件中，必须按照一定格式区别行和列，如使用逗号作为分隔符的 CSV 文件 (Comma-Separated Values) 或者使用制表符作为分隔值的 TSV 文件 (Tab-Separated Values)。但此时也存在一个缺点，就是正常的文件内容中也可能出现逗号或者制表符。</p>
+<p>所以 Hive 默认使用了几个平时很少出现的字符，这些字符一般不会作为内容出现在文件中。Hive 默认的行和列分隔符如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>分隔符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>\n</strong></td>
+<td>对于文本文件来说，每行是一条记录，所以可以使用换行符来分割记录</td>
+</tr>
+<tr>
+<td><strong>^A (Ctrl+A)</strong></td>
+<td>分割字段 (列)，在 CREATE TABLE 语句中也可以使用八进制编码 <code>\001</code> 来表示</td>
+</tr>
+<tr>
+<td><strong>^B</strong></td>
+<td>用于分割 ARRAY 或者 STRUCT 中的元素，或者用于 MAP 中键值对之间的分割，<br>在 CREATE TABLE 语句中也可以使用八进制编码 <code>\002</code> 表示</td>
+</tr>
+<tr>
+<td><strong>^C</strong></td>
+<td>用于 MAP 中键和值之间的分割，在 CREATE TABLE 语句中也可以使用八进制编码 <code>\003</code> 表示</td>
+</tr>
+</tbody>
+</table>
+<p>使用示例如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> page_view(viewTime <span class="built_in">INT</span>, userid <span class="built_in">BIGINT</span>)</span><br><span class="line"> <span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span></span><br><span class="line">   <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\001'</span></span><br><span class="line">   COLLECTION ITEMS <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\002'</span></span><br><span class="line">   <span class="keyword">MAP</span> <span class="keyword">KEYS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\003'</span></span><br><span class="line"> <span class="keyword">STORED</span> <span class="keyword">AS</span> SEQUENCEFILE;</span><br></pre></td></tr></table></figure>
+<h3 id="order-by-sort-by-distribute-by-cluster-by"><a href="#order-by-sort-by-distribute-by-cluster-by" class="headerlink" title="order by,sort by, distribute by, cluster by"></a>order by,sort by, distribute by, cluster by</h3><ol>
+<li>hive sql 中order by 排序对所有数据进行全局排序 这样就迫使智能由一个reducer 来完成 当数据了非常大的时候 会出现处理速度过慢的情况 所以有了 distribute by + sort by = cluster by  </li>
+<li>order by 为全局排序 sort by 为shuflle 前的 local 排序 distribute by col 会将column key 相同的数据分配到同一个reducer task executor 执行 这样在相同key 的partion 内就可以做到局部排序 并且优化性能</li>
+<li>cluster by =  distribute by + sort by 缺点只支持desc 不支持asc</li>
+</ol>
+<h3 id="分区分桶"><a href="#分区分桶" class="headerlink" title="分区分桶"></a>分区分桶</h3><p>hive中做查询时，一般会扫描整个表内容，会消耗很多时间，因此引入分区概念，只查询关心的一部分数据。 </p>
+<p>静态分区：将数据直接导入到指定分区中： load<br>动态分区：根据某个字段判断，将数据插入到分区中</p>
+<h2 id="五、存储格式"><a href="#五、存储格式" class="headerlink" title="五、存储格式"></a>五、存储格式</h2><h3 id="5-1-支持的存储格式"><a href="#5-1-支持的存储格式" class="headerlink" title="5.1 支持的存储格式"></a>5.1 支持的存储格式</h3><p>Hive 会在 HDFS 为每个数据库上创建一个目录，数据库中的表是该目录的子目录，表中的数据会以文件的形式存储在对应的表目录下。Hive 支持以下几种文件存储格式：</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TextFile</strong></td>
+<td>存储为纯文本文件。 这是 Hive 默认的文件存储格式。这种存储方式数据不做压缩，磁盘开销大，数据解析开销大。</td>
+</tr>
+<tr>
+<td><strong>SequenceFile</strong></td>
+<td>SequenceFile 是 Hadoop API 提供的一种二进制文件，它将数据以&lt;key,value&gt;的形式序列化到文件中。这种二进制文件内部使用 Hadoop 的标准的 Writable 接口实现序列化和反序列化。它与 Hadoop API 中的 MapFile 是互相兼容的。Hive 中的 SequenceFile 继承自 Hadoop API 的 SequenceFile，不过它的 key 为空，使用 value 存放实际的值，这样是为了避免 MR 在运行 map 阶段进行额外的排序操作。</td>
+</tr>
+<tr>
+<td><strong>RCFile</strong></td>
+<td>RCFile 文件格式是 FaceBook 开源的一种 Hive 的文件存储格式，首先将表分为几个行组，对每个行组内的数据按列存储，每一列的数据都是分开存储。</td>
+</tr>
+<tr>
+<td><strong>ORC Files</strong></td>
+<td>ORC 是在一定程度上扩展了 RCFile，是对 RCFile 的优化。</td>
+</tr>
+<tr>
+<td><strong>Avro Files</strong></td>
+<td>Avro 是一个数据序列化系统，设计用于支持大批量数据交换的应用。它的主要特点有：支持二进制序列化方式，可以便捷，快速地处理大量数据；动态语言友好，Avro 提供的机制使动态语言可以方便地处理 Avro 数据。</td>
+</tr>
+<tr>
+<td><strong>Parquet</strong></td>
+<td>Parquet 是基于 Dremel 的数据模型和算法实现的，面向分析型业务的列式存储格式。它通过按列进行高效压缩和特殊的编码技术，从而在降低存储空间的同时提高了 IO 效率。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>以上压缩格式中 ORC 和 Parquet 的综合性能突出，使用较为广泛，推荐使用这两种格式。</p>
+</blockquote>
+<h3 id="5-2-指定存储格式"><a href="#5-2-指定存储格式" class="headerlink" title="5.2 指定存储格式"></a>5.2 指定存储格式</h3><p>通常在创建表的时候使用 <code>STORED AS</code> 参数指定：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> page_view(viewTime <span class="built_in">INT</span>, userid <span class="built_in">BIGINT</span>)</span><br><span class="line"> <span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span></span><br><span class="line">   <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\001'</span></span><br><span class="line">   COLLECTION ITEMS <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\002'</span></span><br><span class="line">   <span class="keyword">MAP</span> <span class="keyword">KEYS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\003'</span></span><br><span class="line"> <span class="keyword">STORED</span> <span class="keyword">AS</span> SEQUENCEFILE;</span><br></pre></td></tr></table></figure>
+<p>各个存储文件类型指定方式如下：</p>
+<ul>
+<li>STORED AS TEXTFILE</li>
+<li>STORED AS SEQUENCEFILE</li>
+<li>STORED AS ORC</li>
+<li>STORED AS PARQUET</li>
+<li>STORED AS AVRO</li>
+<li>STORED AS RCFILE</li>
+</ul>
+<h2 id="六、内部表和外部表"><a href="#六、内部表和外部表" class="headerlink" title="六、内部表和外部表"></a>六、内部表和外部表</h2><p>内部表又叫做管理表 (Managed/Internal Table)，创建表时不做任何指定，默认创建的就是内部表。想要创建外部表 (External Table)，则需要使用 External 进行修饰。 内部表和外部表主要区别如下：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>内部表</th>
+<th>外部表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据存储位置</td>
+<td>内部表数据存储的位置由 hive.metastore.warehouse.dir 参数指定，默认情况下表的数据存储在 HDFS 的 <code>/user/hive/warehouse/数据库名.db/表名/</code>  目录下</td>
+<td>外部表数据的存储位置创建表时由 <code>Location</code> 参数指定；</td>
+</tr>
+<tr>
+<td>导入数据</td>
+<td>在导入数据到内部表，内部表将数据移动到自己的数据仓库目录下，数据的生命周期由 Hive 来进行管理</td>
+<td>外部表不会将数据移动到自己的数据仓库目录下，只是在元数据中存储了数据的位置</td>
+</tr>
+<tr>
+<td>删除表</td>
+<td>删除元数据（metadata）和文件</td>
+<td>只删除元数据（metadata）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://cwiki.apache.org/confluence/display/Hive/GettingStarted" target="_blank" rel="noopener">Hive Getting Started</a></li>
+<li><a href="https://tech.meituan.com/2014/02/12/hive-sql-to-mapreduce.html" target="_blank" rel="noopener">Hive SQL 的编译过程</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL" target="_blank" rel="noopener">LanguageManual DDL</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Types" target="_blank" rel="noopener">LanguageManual Types</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/Hive/Managed+vs.+External+Tables" target="_blank" rel="noopener">Managed vs. External Tables</a></li>
+</ol>
+<h2 id="数仓分层"><a href="#数仓分层" class="headerlink" title="数仓分层"></a>数仓分层</h2><h3 id="ODS（Operation-Data-Store-）"><a href="#ODS（Operation-Data-Store-）" class="headerlink" title="ODS（Operation Data Store ）"></a>ODS（Operation Data Store ）</h3><p>原始数据层 不做任何转换</p>
+<h3 id="DS-Data-Warehouse-数据仓库层"><a href="#DS-Data-Warehouse-数据仓库层" class="headerlink" title="DS (Data Warehouse 数据仓库层)"></a>DS (Data Warehouse 数据仓库层)</h3><p>DWD<br>ods层数据 清洗异常 转换 format  事实表与维度表join 宽表  </p>
+<p>DWS<br>dwd 数据聚合 这一阶段聚合可以是相对service 层 ads 更细一点粒度的</p>
+<h3 id="ADS（Application-Data-Store-）"><a href="#ADS（Application-Data-Store-）" class="headerlink" title="ADS（Application Data Store ）"></a>ADS（Application Data Store ）</h3><p>数据面向业务应用 一般直接由service 获取 </p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2>
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">DaiLe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/MrDLontheway" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:726575153@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/p/1005055405104110/home" target="_blank" title="微博">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>微博</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/726575153Mr" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/people/Le-Dai/100023921135287" target="_blank" title="FB Page">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://vk.com/yourname" target="_blank" title="VK Group">
+                      
+                        <i class="fa fa-fw fa-vk"></i>VK Group</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/yourname" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://youtube.com/yourname" target="_blank" title="YouTube">
+                      
+                        <i class="fa fa-fw fa-youtube"></i>YouTube</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://instagram.com/yourname" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="skype:yourname?call|chat" target="_blank" title="Skype">
+                      
+                        <i class="fa fa-fw fa-skype"></i>Skype</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hive的体系架构"><span class="nav-number">1.1.</span> <span class="nav-text">Hive的体系架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#连接方式"><span class="nav-number">1.1.1.</span> <span class="nav-text">连接方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metastore-元数据schema-存储"><span class="nav-number">1.1.2.</span> <span class="nav-text">Metastore 元数据schema 存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HQL的执行流程"><span class="nav-number">1.1.3.</span> <span class="nav-text">HQL的执行流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、数据类型"><span class="nav-number">1.2.</span> <span class="nav-text">三、数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-基本数据类型"><span class="nav-number">1.2.1.</span> <span class="nav-text">3.1 基本数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-隐式转换"><span class="nav-number">1.2.2.</span> <span class="nav-text">3.2 隐式转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-示例"><span class="nav-number">1.2.3.</span> <span class="nav-text">3.4 示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、内容格式"><span class="nav-number">1.3.</span> <span class="nav-text">四、内容格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#order-by-sort-by-distribute-by-cluster-by"><span class="nav-number">1.3.1.</span> <span class="nav-text">order by,sort by, distribute by, cluster by</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分区分桶"><span class="nav-number">1.3.2.</span> <span class="nav-text">分区分桶</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、存储格式"><span class="nav-number">1.4.</span> <span class="nav-text">五、存储格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-支持的存储格式"><span class="nav-number">1.4.1.</span> <span class="nav-text">5.1 支持的存储格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-指定存储格式"><span class="nav-number">1.4.2.</span> <span class="nav-text">5.2 指定存储格式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、内部表和外部表"><span class="nav-number">1.5.</span> <span class="nav-text">六、内部表和外部表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.6.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数仓分层"><span class="nav-number">1.7.</span> <span class="nav-text">数仓分层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ODS（Operation-Data-Store-）"><span class="nav-number">1.7.1.</span> <span class="nav-text">ODS（Operation Data Store ）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DS-Data-Warehouse-数据仓库层"><span class="nav-number">1.7.2.</span> <span class="nav-text">DS (Data Warehouse 数据仓库层)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ADS（Application-Data-Store-）"><span class="nav-number">1.7.3.</span> <span class="nav-text">ADS（Application Data Store ）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用命令"><span class="nav-number">1.8.</span> <span class="nav-text">常用命令</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DaiLe</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

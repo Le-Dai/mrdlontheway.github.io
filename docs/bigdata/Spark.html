@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DaiLe" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Spark https://spark.apache.org/特点Apache Spark 具有以下特点：  使用先进的 DAG 调度程序，查询优化器和物理执行引擎，以实现性能上的保证； 多语言支持，目前支持的有 Java，Scala，Python 和 R； 提供了 80 多个高级 API，可以轻松地构建应用程序； 支持批处理，流处理和复杂的业务分析； 丰富的类库支持：包括 SQL，MLlib，G">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DaiLe&#39;s blog">
+<meta property="og:url" content="https://mrdlontheway.github.io/docs/bigdata/Spark.html">
+<meta property="og:site_name" content="DaiLe&#39;s blog">
+<meta property="og:description" content="Spark https://spark.apache.org/特点Apache Spark 具有以下特点：  使用先进的 DAG 调度程序，查询优化器和物理执行引擎，以实现性能上的保证； 多语言支持，目前支持的有 Java，Scala，Python 和 R； 提供了 80 多个高级 API，可以轻松地构建应用程序； 支持批处理，流处理和复杂的业务分析； 丰富的类库支持：包括 SQL，MLlib，G">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/future-of-spark.png">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/spark-集群模式.png">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/spark-reducebykey.png">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/spark-窄依赖和宽依赖.png">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/spark-DAG.png">
+<meta property="og:updated_time" content="2022-05-25T02:38:43.799Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DaiLe&#39;s blog">
+<meta name="twitter:description" content="Spark https://spark.apache.org/特点Apache Spark 具有以下特点：  使用先进的 DAG 调度程序，查询优化器和物理执行引擎，以实现性能上的保证； 多语言支持，目前支持的有 Java，Scala，Python 和 R； 提供了 80 多个高级 API，可以轻松地构建应用程序； 支持批处理，流处理和复杂的业务分析； 丰富的类库支持：包括 SQL，MLlib，G">
+<meta name="twitter:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/future-of-spark.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://mrdlontheway.github.io/docs/bigdata/Spark.html"/>
+
+
+
+
+
+  <title> | DaiLe's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">DaiLe's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-docs">
+          <a href="/docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-docs"></i> <br />
+            
+            docs
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-resume">
+          <a href="/resume" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-resume"></i> <br />
+            
+            resume
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline"></h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <h1 id="Spark-https-spark-apache-org"><a href="#Spark-https-spark-apache-org" class="headerlink" title="Spark https://spark.apache.org/"></a>Spark <a href="https://spark.apache.org/" target="_blank" rel="noopener">https://spark.apache.org/</a></h1><h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>Apache Spark 具有以下特点：</p>
+<ul>
+<li>使用先进的 DAG 调度程序，查询优化器和物理执行引擎，以实现性能上的保证；</li>
+<li>多语言支持，目前支持的有 Java，Scala，Python 和 R；</li>
+<li>提供了 80 多个高级 API，可以轻松地构建应用程序；</li>
+<li>支持批处理，流处理和复杂的业务分析；</li>
+<li>丰富的类库支持：包括 SQL，MLlib，GraphX 和 Spark Streaming 等库，并且可以将它们无缝地进行组合；  </li>
+<li>丰富的部署模式：支持本地模式和自带的集群模式，也支持在 Hadoop，Mesos，Kubernetes 上运行；</li>
+<li>多数据源支持：支持访问 HDFS，Alluxio，Cassandra，HBase，Hive 以及数百个其他数据源中的数据。</li>
+</ul>
+<div align="center"> <img width="600px" src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/future-of-spark.png"> </div>
+
+
+<h2 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h2><table>
+<thead>
+<tr>
+<th>Term（术语）</th>
+<th>Meaning（含义）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application</td>
+<td>Spark 应用程序，由集群上的一个 Driver 节点和多个 Executor 节点组成。</td>
+</tr>
+<tr>
+<td>Driver program</td>
+<td>主运用程序，该进程运行应用的 main() 方法并且创建  SparkContext</td>
+</tr>
+<tr>
+<td>Cluster manager</td>
+<td>集群资源管理器（例如，Standlone Manager，Mesos，YARN）</td>
+</tr>
+<tr>
+<td>Worker node</td>
+<td>执行计算任务的工作节点</td>
+</tr>
+<tr>
+<td>Executor</td>
+<td>位于工作节点上的应用进程，负责执行计算任务并且将输出数据保存到内存或者磁盘中</td>
+</tr>
+<tr>
+<td>Task</td>
+<td>被发送到 Executor 中的工作单元</td>
+</tr>
+</tbody>
+</table>
+<div align="center"> <img src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/spark-集群模式.png"> </div>
+
+<p><strong>执行过程</strong>：</p>
+<ol>
+<li>用户程序创建 SparkContext 后，它会连接到集群资源管理器，集群资源管理器会为用户程序分配计算资源，并启动 Executor；</li>
+<li>Driver 将计算程序划分为不同的执行阶段和多个 Task，之后将 Task 发送给 Executor；</li>
+<li>Executor 负责执行 Task，并将执行状态汇报给 Driver，同时也会将当前节点资源的使用情况汇报给集群资源管理器。</li>
+</ol>
+<h2 id="RDD简介"><a href="#RDD简介" class="headerlink" title="RDD简介"></a>RDD简介</h2><p><code>RDD</code> 全称为 Resilient Distributed Datasets，是 Spark 最基本的数据抽象，它是只读的、分区记录的集合，支持并行操作，可以由外部数据集或其他 RDD 转换而来，它具有以下特性：</p>
+<ul>
+<li>一个 RDD 由一个或者多个分区（Partitions）组成。对于 RDD 来说，每个分区会被一个计算任务所处理，用户可以在创建 RDD 时指定其分区个数，如果没有指定，则默认采用程序所分配到的 CPU 的核心数；</li>
+<li>RDD 拥有一个用于计算分区的函数 compute；</li>
+<li>RDD 会保存彼此间的依赖关系，RDD 的每次转换都会生成一个新的依赖关系，这种 RDD 之间的依赖关系就像流水线一样。在部分分区数据丢失后，可以通过这种依赖关系重新计算丢失的分区数据，而不是对 RDD 的所有分区进行重新计算；</li>
+<li>Key-Value 型的 RDD 还拥有 Partitioner(分区器)，用于决定数据被存储在哪个分区中，目前 Spark 中支持 HashPartitioner(按照哈希分区) 和 RangeParationer(按照范围进行分区)；</li>
+<li>一个优先位置列表 (可选)，用于存储每个分区的优先位置 (prefered location)。对于一个 HDFS 文件来说，这个列表保存的就是每个分区所在的块的位置，按照“移动数据不如移动计算“的理念，Spark 在进行任务调度的时候，会尽可能的将计算任务分配到其所要处理数据块的存储位置。</li>
+</ul>
+<h2 id="缓存RDD"><a href="#缓存RDD" class="headerlink" title="缓存RDD"></a>缓存RDD</h2><h3 id="缓存级别"><a href="#缓存级别" class="headerlink" title="缓存级别"></a>缓存级别</h3><p>Spark 速度非常快的一个原因是 RDD 支持缓存。成功缓存后，如果之后的操作使用到了该数据集，则直接从缓存中获取。虽然缓存也有丢失的风险，但是由于 RDD 之间的依赖关系，如果某个分区的缓存数据丢失，只需要重新计算该分区即可。</p>
+<p>Spark 支持多种缓存级别 ：</p>
+<table>
+<thead>
+<tr>
+<th>Storage Level<br>（存储级别）</th>
+<th>Meaning（含义）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MEMORY_ONLY</code></td>
+<td>默认的缓存级别，将 RDD 以反序列化的 Java 对象的形式存储在 JVM 中。如果内存空间不够，则部分分区数据将不再缓存。</td>
+</tr>
+<tr>
+<td><code>MEMORY_AND_DISK</code></td>
+<td>将 RDD 以反序列化的 Java 对象的形式存储 JVM 中。如果内存空间不够，将未缓存的分区数据存储到磁盘，在需要使用这些分区时从磁盘读取。</td>
+</tr>
+<tr>
+<td><code>MEMORY_ONLY_SER</code><br></td>
+<td>将 RDD 以序列化的 Java 对象的形式进行存储（每个分区为一个 byte 数组）。这种方式比反序列化对象节省存储空间，但在读取时会增加 CPU 的计算负担。仅支持 Java 和 Scala 。</td>
+</tr>
+<tr>
+<td><code>MEMORY_AND_DISK_SER</code><br></td>
+<td>类似于 <code>MEMORY_ONLY_SER</code>，但是溢出的分区数据会存储到磁盘，而不是在用到它们时重新计算。仅支持 Java 和 Scala。</td>
+</tr>
+<tr>
+<td><code>DISK_ONLY</code></td>
+<td>只在磁盘上缓存 RDD</td>
+</tr>
+<tr>
+<td><code>MEMORY_ONLY_2</code>, <br><code>MEMORY_AND_DISK_2</code>, etc</td>
+<td>与上面的对应级别功能相同，但是会为每个分区在集群中的两个节点上建立副本。</td>
+</tr>
+<tr>
+<td><code>OFF_HEAP</code></td>
+<td>与 <code>MEMORY_ONLY_SER</code> 类似，但将数据存储在堆外内存中。这需要启用堆外内存。</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>启动堆外内存需要配置两个参数：</p>
+<ul>
+<li><strong>spark.memory.offHeap.enabled</strong> ：是否开启堆外内存，默认值为 false，需要设置为 true；</li>
+<li><strong>spark.memory.offHeap.size</strong> : 堆外内存空间的大小，默认值为 0，需要设置为正值。</li>
+</ul>
+</blockquote>
+<h3 id="使用缓存"><a href="#使用缓存" class="headerlink" title="使用缓存"></a>使用缓存</h3><p>缓存数据的方法有两个：<code>persist</code> 和 <code>cache</code> 。<code>cache</code> 内部调用的也是 <code>persist</code>，它是 <code>persist</code> 的特殊化形式，等价于 <code>persist(StorageLevel.MEMORY_ONLY)</code>。示例如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 所有存储级别均定义在 StorageLevel 对象中</span></span><br><span class="line">fileRDD.persist(<span class="type">StorageLevel</span>.<span class="type">MEMORY_AND_DISK</span>)</span><br><span class="line">fileRDD.cache()</span><br></pre></td></tr></table></figure>
+<h2 id="操作RDD"><a href="#操作RDD" class="headerlink" title="操作RDD"></a>操作RDD</h2><p>RDD 支持两种类型的操作：<em>transformations</em>（转换，从现有数据集创建新数据集）和 <em>actions</em>（在数据集上运行计算后将值返回到驱动程序）。RDD 中的所有转换操作都是惰性的，它们只是记住这些转换操作，但不会立即执行，只有遇到 <em>action</em> 操作后才会真正的进行计算，这类似于函数式编程中的惰性求值。</p>
+<h3 id="移除缓存"><a href="#移除缓存" class="headerlink" title="移除缓存"></a>移除缓存</h3><p>Spark 会自动监视每个节点上的缓存使用情况，并按照最近最少使用（LRU）的规则删除旧数据分区。当然，你也可以使用 <code>RDD.unpersist()</code> 方法进行手动删除。</p>
+<h2 id="理解shuffle"><a href="#理解shuffle" class="headerlink" title="理解shuffle"></a>理解shuffle</h2><h3 id="shuffle介绍"><a href="#shuffle介绍" class="headerlink" title="shuffle介绍"></a>shuffle介绍</h3><p>在 Spark 中，一个任务对应一个分区，通常不会跨分区操作数据。但如果遇到 <code>reduceByKey</code> 等操作，Spark 必须从所有分区读取数据，并查找所有键的所有值，然后汇总在一起以计算每个键的最终结果 ，这称为 <code>Shuffle</code>。</p>
+<div align="center"> <img width="600px" src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/spark-reducebykey.png"> </div>
+
+
+
+<h3 id="Shuffle的影响"><a href="#Shuffle的影响" class="headerlink" title="Shuffle的影响"></a>Shuffle的影响</h3><p>Shuffle 是一项昂贵的操作，因为它通常会跨节点操作数据，这会涉及磁盘 I/O，网络 I/O，和数据序列化。某些 Shuffle 操作还会消耗大量的堆内存，因为它们使用堆内存来临时存储需要网络传输的数据。Shuffle 还会在磁盘上生成大量中间文件，从 Spark 1.3 开始，这些文件将被保留，直到相应的 RDD 不再使用并进行垃圾回收，这样做是为了避免在计算时重复创建 Shuffle 文件。如果应用程序长期保留对这些 RDD 的引用，则垃圾回收可能在很长一段时间后才会发生，这意味着长时间运行的 Spark 作业可能会占用大量磁盘空间，通常可以使用 <code>spark.local.dir</code> 参数来指定这些临时文件的存储目录。</p>
+<h3 id="导致Shuffle的操作"><a href="#导致Shuffle的操作" class="headerlink" title="导致Shuffle的操作"></a>导致Shuffle的操作</h3><p>由于 Shuffle 操作对性能的影响比较大，所以需要特别注意使用，以下操作都会导致 Shuffle：</p>
+<ul>
+<li><strong>涉及到重新分区操作</strong>： 如 <code>repartition</code> 和 <code>coalesce</code>；</li>
+<li><strong>所有涉及到 ByKey 的操作</strong>：如 <code>groupByKey</code> 和 <code>reduceByKey</code>，但 <code>countByKey</code> 除外；</li>
+<li><strong>联结操作</strong>：如 <code>cogroup</code> 和 <code>join</code>。</li>
+</ul>
+<h3 id="SortShuffleManager"><a href="#SortShuffleManager" class="headerlink" title="SortShuffleManager"></a>SortShuffleManager</h3><p>SortShuffleManager的运⾏机制分为三种： </p>
+<ol>
+<li>普通运⾏机制  </li>
+<li>bypass运⾏机制<br>当 shuffle read task 的数量⼩于等于 spark.shuffle.sort.bypassMergeThreshold 参<br>数的值时（默认为 200），就会启⽤ bypass 机制；  </li>
+<li>Tungsten Sort运⾏机制<br>开启此运⾏机制需设置配置项 spark.shuffle.manager=tungsten-sort 。但是开启此<br>项配置也不能保证就⼀定采⽤此运⾏机制。</li>
+</ol>
+<h3 id="普通运行机制"><a href="#普通运行机制" class="headerlink" title="普通运行机制"></a>普通运行机制</h3><p>在该模式下，数据会先写⼊⼀个内存数据结构中，此时根据不同的 shuffle 算⼦，可能选<br>⽤不同的数据结构。 如果是 reduceByKey 这种聚合类的 shuffle 算⼦，那么会选⽤ Map<br>数据结构，⼀边通过 Map 进⾏聚合，⼀边写⼊内存；如果是 join 这种普通的 shuffle 算⼦，<br>那么会选⽤ Array 数据结构，直接写⼊内存 。接着，每写⼀条数据进⼊内存数据结构之<br>后，就会判断⼀下，是否达到了某个临界阈值。如果达到临界阈值的话，那么就会尝试<br>将内存数据结构中的数据溢写到磁盘，然后清空内存数据结构。<br>在溢写到磁盘⽂件之前，会先根据 key 对内存数据结构中已有的数据进⾏排序。 排序过<br>后，会分批将数据写⼊磁盘⽂件。默认的 batch 数量是 10000 条，也就是说，排序好的数据，<br>会以每批 1 万条数据的形式分批写⼊磁盘⽂件 。写⼊磁盘⽂件是通过 Java 的<br>BufferedOutputStream 实现的。 BufferedOutputStream 是 Java 的缓冲输出流，⾸先<br>会将数据缓冲在内存中，当内存缓冲满溢之后再⼀次写⼊磁盘⽂件中，这样可以减少磁<br>盘 IO 次数，提升性能。<br>⼀个 task 将所有数据写⼊内存数据结构的过程中，会发⽣多次磁盘溢写操作，也就会产<br>⽣多个临时⽂件。最后会将之前所有的临时磁盘⽂件都进⾏合并，这就是merge 过程，<br>此时会将之前所有临时磁盘⽂件中的数据读取出来，然后依次写⼊最终的磁盘⽂件之<br>中。此外，由于⼀个 task 就只对应⼀个磁盘⽂件，也就意味着该 task 为下游 stage 的<br>task 准备的数据都在这⼀个⽂件中，因此还会单独写⼀份索引⽂件，其中标识了下游各<br>个 task 的数据在⽂件中的 start offset 与 end offset。<br>SortShuffleManager 由于有⼀个磁盘⽂件 merge 的过程，因此⼤⼤减少了⽂件数量。<br>⽐如第⼀个 stage 有 50 个 task，总共有 10 个 Executor，每个 Executor 执⾏ 5 个<br>task，⽽第⼆个 stage 有 100 个 task。由于每个 task 最终只有⼀个磁盘⽂件，因此此时<br>每个 Executor 上只有 5 个磁盘⽂件，所有 Executor 只有 50 个磁盘⽂件。</p>
+<p>Reducer 端任务数⽐较少的情况下，基于 Hash Shuffle 实现机制明显⽐基于 Sort Shu<br>ffle 实现机制要快，因此基于 Sort huffle 实现机制提供了⼀个回退⽅案，就是<br>bypass 运⾏机制。对于 Reducer 端任务数少于配置属性 spark.shuffle.sort.bypassM<br>ergeThreshold 设置的个数时，使⽤带 Hash ⻛格的回退计划</p>
+<h3 id="总结：将本task-所有数据写入到一个文件内-先通过内存溢写-然后merge-合并成一个-文件以级一个index-文件记录offset-类似kafka-每个task-会生成一个文件"><a href="#总结：将本task-所有数据写入到一个文件内-先通过内存溢写-然后merge-合并成一个-文件以级一个index-文件记录offset-类似kafka-每个task-会生成一个文件" class="headerlink" title="总结：将本task 所有数据写入到一个文件内 先通过内存溢写  然后merge 合并成一个 文件以级一个index 文件记录offset 类似kafka 每个task 会生成一个文件"></a>总结：将本task 所有数据写入到一个文件内 先通过内存溢写  然后merge 合并成一个 文件以级一个index 文件记录offset 类似kafka 每个task 会生成一个文件</h3><h3 id="bypass运行机制"><a href="#bypass运行机制" class="headerlink" title="bypass运行机制"></a>bypass运行机制</h3><p>bypass 运⾏机制的触发条件如下：<br>shuffle map task 数量⼩于 spark.shuffle.sort.bypassMergeThreshold=200 参<br>数的值。<br>不是聚合类的 shuffle 算⼦。<br>此时，每个 task 会为每个下游 task 都创建⼀个临时磁盘⽂件，并将数据按 key 进⾏<br>hash 然后根据 key 的 hash 值，将 key 写⼊对应的磁盘⽂件之中。当然，写⼊磁盘⽂件<br>时也是先写⼊内存缓冲，缓冲写满之后再溢写到磁盘⽂件的。最后，同样会将所有临时<br>磁盘⽂件都合并成⼀个磁盘⽂件，并创建⼀个单独的索引⽂件。<br>该过程的磁盘写机制其实跟未经优化的 HashShuffleManager 是⼀模⼀样的，因为都要<br>创建数量惊⼈的磁盘⽂件，只是在最后会做⼀个磁盘⽂件的合并⽽已。因此少量的最终<br>磁盘⽂件，也让该机制相对未经优化的 HashShuffleManager 来说， shuffle read 的<br>性能会更好。</p>
+<h3 id="总结：该机制与普通-SortShuffleManager-运⾏机制的不同在于：第⼀，磁盘写机制不同；第⼆，不会进⾏排序。也就是说，启⽤该机制的最⼤好处在于，-shuffle-write-过程中，不需要进⾏数据的排序操作，也就节省掉了这部分的性能开销-性能高-无需排序-后续task-read-data-快"><a href="#总结：该机制与普通-SortShuffleManager-运⾏机制的不同在于：第⼀，磁盘写机制不同；第⼆，不会进⾏排序。也就是说，启⽤该机制的最⼤好处在于，-shuffle-write-过程中，不需要进⾏数据的排序操作，也就节省掉了这部分的性能开销-性能高-无需排序-后续task-read-data-快" class="headerlink" title="总结：该机制与普通 SortShuffleManager 运⾏机制的不同在于：第⼀，磁盘写机制不同；第⼆，不会进⾏排序。也就是说，启⽤该机制的最⼤好处在于， shuffle write 过程中，不需要进⾏数据的排序操作，也就节省掉了这部分的性能开销  性能高 无需排序 后续task read data 快"></a>总结：该机制与普通 SortShuffleManager 运⾏机制的不同在于：第⼀，磁盘写机制不同；第⼆，不会进⾏排序。也就是说，启⽤该机制的最⼤好处在于， shuffle write 过程中，不需要进⾏数据的排序操作，也就节省掉了这部分的性能开销  性能高 无需排序 后续task read data 快</h3><h3 id="shuffle相关参数调优"><a href="#shuffle相关参数调优" class="headerlink" title="shuffle相关参数调优"></a>shuffle相关参数调优</h3><table>
+<thead>
+<tr>
+<th>key</th>
+<th>desc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.shuffle.file.buffer</td>
+<td>默认值：32k参数说明：该参数⽤于设置shuffle write task的BufferedOutputStream的buffer缓冲⼤⼩。将数据写到磁盘⽂件之前，会先写⼊buffer缓冲中，待缓冲写满之后，才会溢写到磁盘。调优建议：如果作业可⽤的内存资源较为充⾜的话，可以适当增加这个参数的⼤⼩（⽐如64k），从⽽减少shuffle write过程中溢写磁盘⽂件的次数，也就可以减少磁盘IO次数，进⽽提升性能。在实践中发现，合理调节该参数，性能会有1%~5%的提升。</td>
+</tr>
+<tr>
+<td>spark.reducer.maxSizeInFlight</td>
+<td>默认值：48m参数说明：该参数⽤于设置shuffle read task的buffer缓冲⼤⼩，⽽这个buffer缓冲决定了每次能够拉取多少数据。调优建议：如果作业可⽤的内存资源较为充⾜的话，可以适当增加这个参数的⼤⼩（⽐如96m），从⽽减少拉取数据的次数，也就可以减少⽹络传输的次数，进⽽提升性能。在实践中发现，合理调节该参数，性能会有1%~5%的提升。</td>
+</tr>
+<tr>
+<td>spark.shuffle.io.maxRetries</td>
+<td>默认值：3参数说明：shuffle read task从shuffle write task所在节点拉取属于⾃⼰的数据时，如果因为⽹络异常导致拉取失败，是会⾃动进⾏重试的。该参数就代表了可以重试的最⼤次数。如果在指定次数之内拉取还是没有成功，就可能会导致作业执⾏失败。调优建议：对于那些包含了特别耗时的shuffle操作的作业，建议增加重试最⼤次数（⽐如60次），以避免由于JVM的full gc或者⽹络不稳定等因素导致的数据拉取失败。在实践中发现，对于针对超⼤数据量（数⼗亿~上百亿）的shuffle过程，调节该参数可以⼤幅度提升稳定性。</td>
+</tr>
+<tr>
+<td>spark.shuffle.io.retryWait</td>
+<td>默认值：5s参数说明：具体解释同上，该参数代表了每次重试拉取数据的等待间隔，默认是5s。调优建议：建议加⼤间隔时⻓（⽐如60s），以增加shuffle操作的稳定性。</td>
+</tr>
+<tr>
+<td>spark.shuffle.memoryFraction</td>
+<td>默认值：0.2参数说明：该参数代表了Executor内存中，分配给shuffle read task进⾏聚合操作的内存⽐例，默认是20%。调优建议：在资源参数调优中讲解过这个参数。如果内存充⾜，⽽且很少使⽤持久化操作，建议调⾼这个⽐例，给shuffle read的聚合操作更多内存，以避免由于内存不⾜导致聚合过程中频繁读写磁盘。在实践中发现，合理调节该参数可以将性能提升10%左右。</td>
+</tr>
+<tr>
+<td>spark.shuffle.manager</td>
+<td>默认值：sort参数说明：该参数⽤于设置ShuffleManager的类型。Spark 1.5以后，有三个可选项：hash、sort和tungsten-sort。HashShuffleManager是Spark 1.2以前的默认选项，但是Spark 1.2以及之后的版本默认都是SortShuffleManager了。tungsten-sort与sort类似，但是使⽤了tungsten计划中的堆外内存管理机制，内存使⽤效率更⾼。调优建议：由于SortShuffleManager默认会对数据进⾏排序，因此如果你的业务逻辑中需要该排序机制的话，则使⽤默认的SortShuffleManager就可以；⽽如果你的业务逻辑不需要对数据进⾏排序，那么建议参考后⾯的⼏个参数调优，通过bypass机制或优化的HashShuffleManager来避免排序操作，同时提供较好的磁盘读写性能。这⾥要注意的是，tungsten-sort要慎⽤，因为之前发现了⼀些相应的bug。</td>
+</tr>
+<tr>
+<td>spark.shuffle.sort.bypassMergeThreshold</td>
+<td>默认值：200参数说明：当ShuffleManager为SortShuffleManager时，如果shuffle read task的数量⼩于这个阈值（默认是200），则shuffle write过程中不会进⾏排序操作，⽽是直接按照未经优化的HashShuffleManager的⽅式去写数据，但是最后会将每个task产⽣的所有临时磁盘⽂件都合并成⼀个⽂件，并会创建单独的索引⽂件。调优建议：当你使⽤SortShuffleManager时，如果的确不需要排序操作，那么建议将这个参数调⼤⼀些，⼤于shuffle read task的数量。那么此时就会⾃动启⽤bypass机制，map-side就不会进⾏排序了，减少了排序的性能开销。但是这种⽅式下，依然会产⽣⼤量的磁盘⽂件，因此shuffle write性能有待提⾼。</td>
+</tr>
+<tr>
+<td>spark.shuffle.consolidateFiles</td>
+<td>默认值：false参数说明：如果使⽤HashShuffleManager，该参数有效。如果设置为true，那么就会开启consolidate机制，会⼤幅度合并shuffle write的输出⽂件，对于shuffle read task数量特别多的情况下，这种⽅法可以极⼤地减少磁盘IO开销，提升性能。调优建议：如果的确不需要SortShuffleManager的排序机制，那么除了使⽤bypass机制，还可以尝试将spark.shffle.manager参数⼿动指定为hash，使⽤HashShuffleManager，同时开启consolidate机制。在实践中尝试过，发现其性能⽐开启了bypass机制的SortShuffleManager要⾼出10%~30%。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="宽依赖和窄依赖"><a href="#宽依赖和窄依赖" class="headerlink" title="宽依赖和窄依赖"></a>宽依赖和窄依赖</h2><p>RDD 和它的父 RDD(s) 之间的依赖关系分为两种不同的类型：</p>
+<ul>
+<li><strong>窄依赖 (narrow dependency)</strong>：父 RDDs 的一个分区最多被子 RDDs 一个分区所依赖；</li>
+<li><strong>宽依赖 (wide dependency)</strong>：父 RDDs 的一个分区可以被子 RDDs 的多个子分区所依赖。</li>
+</ul>
+<p>如下图，每一个方框表示一个 RDD，带有颜色的矩形表示分区：</p>
+<div align="center"> <img width="600px" src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/spark-窄依赖和宽依赖.png"> </div>
+
+
+
+<p>区分这两种依赖是非常有用的：</p>
+<ul>
+<li>首先，窄依赖允许在一个集群节点上以流水线的方式（pipeline）对父分区数据进行计算，例如先执行 map 操作，然后执行 filter 操作。而宽依赖则需要计算好所有父分区的数据，然后再在节点之间进行 Shuffle，这与 MapReduce 类似。</li>
+<li>窄依赖能够更有效地进行数据恢复，因为只需重新对丢失分区的父分区进行计算，且不同节点之间可以并行计算；而对于宽依赖而言，如果数据丢失，则需要对所有父分区数据进行计算并再次 Shuffle。</li>
+</ul>
+<h2 id="DAG的生成"><a href="#DAG的生成" class="headerlink" title="DAG的生成"></a>DAG的生成</h2><p>RDD(s) 及其之间的依赖关系组成了 DAG(有向无环图)，DAG 定义了这些 RDD(s) 之间的 Lineage(血统) 关系，通过血统关系，如果一个 RDD 的部分或者全部计算结果丢失了，也可以重新进行计算。那么 Spark 是如何根据 DAG 来生成计算任务呢？主要是根据依赖关系的不同将 DAG 划分为不同的计算阶段 (Stage)：</p>
+<ul>
+<li>对于窄依赖，由于分区的依赖关系是确定的，其转换操作可以在同一个线程执行，所以可以划分到同一个执行阶段；</li>
+<li>对于宽依赖，由于 Shuffle 的存在，只能在父 RDD(s) 被 Shuffle 处理完成后，才能开始接下来的计算，因此遇到宽依赖就需要重新划分阶段。</li>
+</ul>
+<div align="center"> <img width="600px" height="600px" src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/spark-DAG.png"> </div>
+
+
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">DaiLe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/MrDLontheway" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:726575153@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/p/1005055405104110/home" target="_blank" title="微博">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>微博</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/726575153Mr" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/people/Le-Dai/100023921135287" target="_blank" title="FB Page">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://vk.com/yourname" target="_blank" title="VK Group">
+                      
+                        <i class="fa fa-fw fa-vk"></i>VK Group</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/yourname" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://youtube.com/yourname" target="_blank" title="YouTube">
+                      
+                        <i class="fa fa-fw fa-youtube"></i>YouTube</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://instagram.com/yourname" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="skype:yourname?call|chat" target="_blank" title="Skype">
+                      
+                        <i class="fa fa-fw fa-skype"></i>Skype</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spark-https-spark-apache-org"><span class="nav-number">1.</span> <span class="nav-text">Spark https://spark.apache.org/</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集群架构"><span class="nav-number">1.2.</span> <span class="nav-text">集群架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDD简介"><span class="nav-number">1.3.</span> <span class="nav-text">RDD简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存RDD"><span class="nav-number">1.4.</span> <span class="nav-text">缓存RDD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存级别"><span class="nav-number">1.4.1.</span> <span class="nav-text">缓存级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用缓存"><span class="nav-number">1.4.2.</span> <span class="nav-text">使用缓存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作RDD"><span class="nav-number">1.5.</span> <span class="nav-text">操作RDD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#移除缓存"><span class="nav-number">1.5.1.</span> <span class="nav-text">移除缓存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#理解shuffle"><span class="nav-number">1.6.</span> <span class="nav-text">理解shuffle</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffle介绍"><span class="nav-number">1.6.1.</span> <span class="nav-text">shuffle介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shuffle的影响"><span class="nav-number">1.6.2.</span> <span class="nav-text">Shuffle的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#导致Shuffle的操作"><span class="nav-number">1.6.3.</span> <span class="nav-text">导致Shuffle的操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SortShuffleManager"><span class="nav-number">1.6.4.</span> <span class="nav-text">SortShuffleManager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#普通运行机制"><span class="nav-number">1.6.5.</span> <span class="nav-text">普通运行机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结：将本task-所有数据写入到一个文件内-先通过内存溢写-然后merge-合并成一个-文件以级一个index-文件记录offset-类似kafka-每个task-会生成一个文件"><span class="nav-number">1.6.6.</span> <span class="nav-text">总结：将本task 所有数据写入到一个文件内 先通过内存溢写  然后merge 合并成一个 文件以级一个index 文件记录offset 类似kafka 每个task 会生成一个文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bypass运行机制"><span class="nav-number">1.6.7.</span> <span class="nav-text">bypass运行机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结：该机制与普通-SortShuffleManager-运⾏机制的不同在于：第⼀，磁盘写机制不同；第⼆，不会进⾏排序。也就是说，启⽤该机制的最⼤好处在于，-shuffle-write-过程中，不需要进⾏数据的排序操作，也就节省掉了这部分的性能开销-性能高-无需排序-后续task-read-data-快"><span class="nav-number">1.6.8.</span> <span class="nav-text">总结：该机制与普通 SortShuffleManager 运⾏机制的不同在于：第⼀，磁盘写机制不同；第⼆，不会进⾏排序。也就是说，启⽤该机制的最⼤好处在于， shuffle write 过程中，不需要进⾏数据的排序操作，也就节省掉了这部分的性能开销  性能高 无需排序 后续task read data 快</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shuffle相关参数调优"><span class="nav-number">1.6.9.</span> <span class="nav-text">shuffle相关参数调优</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#宽依赖和窄依赖"><span class="nav-number">1.7.</span> <span class="nav-text">宽依赖和窄依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DAG的生成"><span class="nav-number">1.8.</span> <span class="nav-text">DAG的生成</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DaiLe</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

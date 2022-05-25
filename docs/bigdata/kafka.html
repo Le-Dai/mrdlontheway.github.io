@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DaiLe" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Kafka https://kafka.apache.org/简介ApacheKafka 是一个分布式的流处理平台。它具有以下特点：  支持消息的发布和订阅，类似于 RabbtMQ、ActiveMQ 等消息队列； 支持数据实时处理； 能保证消息的可靠性投递； 支持消息的持久化存储，并通过多副本分布式的存储方案来保证消息的容错； 高吞吐率，单 Broker 可以轻松处理数千个分区以及每秒百万级的消息">
+<meta property="og:type" content="website">
+<meta property="og:title" content="DaiLe&#39;s blog">
+<meta property="og:url" content="https://mrdlontheway.github.io/docs/bigdata/kafka.html">
+<meta property="og:site_name" content="DaiLe&#39;s blog">
+<meta property="og:description" content="Kafka https://kafka.apache.org/简介ApacheKafka 是一个分布式的流处理平台。它具有以下特点：  支持消息的发布和订阅，类似于 RabbtMQ、ActiveMQ 等消息队列； 支持数据实时处理； 能保证消息的可靠性投递； 支持消息的持久化存储，并通过多副本分布式的存储方案来保证消息的容错； 高吞吐率，单 Broker 可以轻松处理数千个分区以及每秒百万级的消息">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/kafka-topic.png">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/kafka-producer-consumer.png">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/kafka消费者.png">
+<meta property="og:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/kafka-cluster.png">
+<meta property="og:updated_time" content="2022-05-25T02:38:43.799Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DaiLe&#39;s blog">
+<meta name="twitter:description" content="Kafka https://kafka.apache.org/简介ApacheKafka 是一个分布式的流处理平台。它具有以下特点：  支持消息的发布和订阅，类似于 RabbtMQ、ActiveMQ 等消息队列； 支持数据实时处理； 能保证消息的可靠性投递； 支持消息的持久化存储，并通过多副本分布式的存储方案来保证消息的容错； 高吞吐率，单 Broker 可以轻松处理数千个分区以及每秒百万级的消息">
+<meta name="twitter:image" content="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/kafka-topic.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://mrdlontheway.github.io/docs/bigdata/kafka.html"/>
+
+
+
+
+
+  <title> | DaiLe's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">DaiLe's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-docs">
+          <a href="/docs/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-docs"></i> <br />
+            
+            docs
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-resume">
+          <a href="/resume" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-resume"></i> <br />
+            
+            resume
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline"></h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <h1 id="Kafka-https-kafka-apache-org"><a href="#Kafka-https-kafka-apache-org" class="headerlink" title="Kafka https://kafka.apache.org/"></a>Kafka <a href="https://kafka.apache.org/" target="_blank" rel="noopener">https://kafka.apache.org/</a></h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>ApacheKafka 是一个分布式的流处理平台。它具有以下特点：</p>
+<ul>
+<li>支持消息的发布和订阅，类似于 RabbtMQ、ActiveMQ 等消息队列；</li>
+<li>支持数据实时处理；</li>
+<li>能保证消息的可靠性投递；</li>
+<li>支持消息的持久化存储，并通过多副本分布式的存储方案来保证消息的容错；</li>
+<li>高吞吐率，单 Broker 可以轻松处理数千个分区以及每秒百万级的消息量。</li>
+</ul>
+<h2 id="二、基本概念"><a href="#二、基本概念" class="headerlink" title="二、基本概念"></a>二、基本概念</h2><h3 id="2-1-Messages-And-Batches"><a href="#2-1-Messages-And-Batches" class="headerlink" title="2.1 Messages And Batches"></a>2.1 Messages And Batches</h3><p>Kafka 的基本数据单元被称为 message(消息)，为减少网络开销，提高效率，多个消息会被放入同一批次 (Batch) 中后再写入。</p>
+<h3 id="2-2-Topics-And-Partitions"><a href="#2-2-Topics-And-Partitions" class="headerlink" title="2.2 Topics And Partitions"></a>2.2 Topics And Partitions</h3><p>Kafka 的消息通过 Topics(主题) 进行分类，一个主题可以被分为若干个 Partitions(分区)，一个分区就是一个提交日志 (commit log)。消息以追加的方式写入分区，然后以先入先出的顺序读取。Kafka 通过分区来实现数据的冗余和伸缩性，分区可以分布在不同的服务器上，这意味着一个 Topic 可以横跨多个服务器，以提供比单个服务器更强大的性能。</p>
+<p>由于一个 Topic 包含多个分区，因此无法在整个 Topic 范围内保证消息的顺序性，但可以保证消息在单个分区内的顺序性。</p>
+<div align="center"> <img src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/kafka-topic.png"> </div>
+
+<h3 id="2-3-Producers-And-Consumers"><a href="#2-3-Producers-And-Consumers" class="headerlink" title="2.3 Producers And Consumers"></a>2.3 Producers And Consumers</h3><h4 id="1-生产者"><a href="#1-生产者" class="headerlink" title="1. 生产者"></a>1. 生产者</h4><p>生产者负责创建消息。一般情况下，生产者在把消息均衡地分布到在主题的所有分区上，而并不关心消息会被写到哪个分区。如果我们想要把消息写到指定的分区，可以通过自定义分区器来实现。</p>
+<h4 id="2-消费者"><a href="#2-消费者" class="headerlink" title="2. 消费者"></a>2. 消费者</h4><p>消费者是消费者群组的一部分，消费者负责消费消息。消费者可以订阅一个或者多个主题，并按照消息生成的顺序来读取它们。消费者通过检查消息的偏移量 (offset) 来区分读取过的消息。偏移量是一个不断递增的数值，在创建消息时，Kafka 会把它添加到其中，在给定的分区里，每个消息的偏移量都是唯一的。消费者把每个分区最后读取的偏移量保存在 Zookeeper 或 Kafka 上，如果消费者关闭或者重启，它还可以重新获取该偏移量，以保证读取状态不会丢失。</p>
+<div align="center"> <img src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/kafka-producer-consumer.png"> </div>
+
+<p>一个分区只能被同一个消费者群组里面的一个消费者读取，但可以被不同消费者群组中所组成的多个消费者共同读取。多个消费者群组中消费者共同读取同一个主题时，彼此之间互不影响。</p>
+<div align="center"> <img src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/kafka消费者.png"> </div>
+
+
+<h3 id="2-4-Brokers-And-Clusters"><a href="#2-4-Brokers-And-Clusters" class="headerlink" title="2.4 Brokers And Clusters"></a>2.4 Brokers And Clusters</h3><p>一个独立的 Kafka 服务器被称为 Broker。Broker 接收来自生产者的消息，为消息设置偏移量，并提交消息到磁盘保存。Broker 为消费者提供服务，对读取分区的请求做出响应，返回已经提交到磁盘的消息。</p>
+<p>Broker 是集群 (Cluster) 的组成部分。每一个集群都会选举出一个 Broker 作为集群控制器 (Controller)，集群控制器负责管理工作，包括将分区分配给 Broker 和监控 Broker。</p>
+<p>在集群中，一个分区 (Partition) 从属一个 Broker，该 Broker 被称为分区的首领 (Leader)。一个分区可以分配给多个 Brokers，这个时候会发生分区复制。这种复制机制为分区提供了消息冗余，如果有一个 Broker 失效，其他 Broker 可以接管领导权。</p>
+<div align="center"> <img src="https://gitee.com/heibaiying/BigData-Notes/raw/master/pictures/kafka-cluster.png"> </div>
+
+<h2 id="kafka-特性"><a href="#kafka-特性" class="headerlink" title="kafka 特性"></a>kafka 特性</h2><h3 id="kafka-顺序读写优势好处以及为何高性能"><a href="#kafka-顺序读写优势好处以及为何高性能" class="headerlink" title="kafka 顺序读写优势好处以及为何高性能"></a>kafka 顺序读写优势好处以及为何高性能</h3><p>kafka cluster recive message 不做任何额外的 transform 处理 直接顺序写入磁盘持久化 这样处理高效率, 在写入磁盘 与 consumer 消费数据读磁盘数据的时候用到了 zero-copy 极大的提高了性能</p>
+<h2 id="zero-copy"><a href="#zero-copy" class="headerlink" title="zero-copy"></a>zero-copy</h2><h3 id="硬件层面"><a href="#硬件层面" class="headerlink" title="硬件层面"></a>硬件层面</h3><p>DMA(Direct Memory Access，直接内存存取) 它允许不同速度的硬件装置来沟通，而不需要依赖于CPU 的大量中断负载。<br>DMA控制器，接管了数据读写请求，减少CPU的负担。这样一来，CPU能高效工作了。<br>现代硬盘基本都支持DMA。 </p>
+<p>DMA Scatter/Gather<br>发散 收集 发送数据指发送数据的文件描述符信息 内存 start offset end offset 以及length 极大提升性能</p>
+<h3 id="系统调用层"><a href="#系统调用层" class="headerlink" title="系统调用层"></a>系统调用层</h3><p>1.read() 方法 传统io 模型中 磁盘数据需要 先通过dma 将磁盘数据拿到os 层 用户程序再将数据从os 层拿到 用户层 write 写出同理<br>2.mmap()  方法 将应用缓冲区直接映射到os 缓冲区。减少应用层到os 层的copy<br>3.java拥有自己的内存管理方式 存储数据 主要由堆内内存以及堆外内存 kafka 之所以高性能 因为数据不依赖java 堆内内存 直接使用direct memory  这样减少了 应用缓冲区到os 缓冲区的copy, 为何<br>java heap memory 需要 在搬运一次到os memory 以为java 内存管理的有gc的机制 也就是说 堆内某段数据会因为gc 改变内存地址 但是 os 层 数据操作需要数据内存地址是固定的 所以java 需要先将<br>堆内内存copy 到 os buffer 这样内存地址值固定后 在调用os 层 func 操作<br>4.sendfile() broker 将数据给消费者实现  os 直接将磁盘数据copy 到os buffer 然后直接发送到网卡端口 减少了 os buffer -&gt; socket buffer -&gt; 网卡接口的操作</p>
+<h2 id="kafka-数据高可用相关"><a href="#kafka-数据高可用相关" class="headerlink" title="kafka 数据高可用相关"></a>kafka 数据高可用相关</h2><h3 id="producer-发送的数据如果保证高可用"><a href="#producer-发送的数据如果保证高可用" class="headerlink" title="producer 发送的数据如果保证高可用 ?"></a>producer 发送的数据如果保证高可用 ?</h3><p>ACK 应答机制<br>acks为1时（默认），表示数据发送到Kafka后，经过leader成功接收消息的的确认，才算发送成功，如果leader宕机了，就会丢失数据。<br>acks为0时， 表示生产者将数据发送出去就不管了，不等待任何返回。这种情况下数据传输效率最高，但是数据可靠性最低，当 server挂掉的时候就会丢数据；<br>acks为-1/all时，表示生产者需要等待ISR中的所有follower都确认接收到数据后才算发送完成，这样数据不会丢失，因此可靠性最高，性能最低。  </p>
+<p>producer 将数据发送到cluster 的过程是先由leader 接收数据 再由leader 分发给其他备份副本</p>
+<h3 id="cluser-内-单topic-leader不可用-如何保证topic可用"><a href="#cluser-内-单topic-leader不可用-如何保证topic可用" class="headerlink" title="cluser 内 单topic leader不可用 如何保证topic可用 ?"></a>cluser 内 单topic leader不可用 如何保证topic可用 ?</h3><p>ISR 机制 (In-Sync Replicas)  </p>
+<p>leader 不可用后controller 会选取isr 列表内的另一个副本为leader 提供服务 若所有副本都不同步 也可以选择不同步副本继续服务(config 可配置是否开启 )优点高可用 缺点会丢失数据  </p>
+<h3 id="consumer-消费数据如何保证消费的准确性"><a href="#consumer-消费数据如何保证消费的准确性" class="headerlink" title="consumer 消费数据如何保证消费的准确性"></a>consumer 消费数据如何保证消费的准确性</h3><p>kafka offser 管理。offset 信息存储在kafka cluster 消费端消费多少 就提交多少偏移量 消费者组内出现异常会触发  rebalance 组内心跳 有挂掉后 会重分配消费 </p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">DaiLe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/MrDLontheway" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:726575153@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/p/1005055405104110/home" target="_blank" title="微博">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>微博</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/726575153Mr" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.facebook.com/people/Le-Dai/100023921135287" target="_blank" title="FB Page">
+                      
+                        <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://vk.com/yourname" target="_blank" title="VK Group">
+                      
+                        <i class="fa fa-fw fa-vk"></i>VK Group</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://stackoverflow.com/yourname" target="_blank" title="StackOverflow">
+                      
+                        <i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://youtube.com/yourname" target="_blank" title="YouTube">
+                      
+                        <i class="fa fa-fw fa-youtube"></i>YouTube</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://instagram.com/yourname" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="skype:yourname?call|chat" target="_blank" title="Skype">
+                      
+                        <i class="fa fa-fw fa-skype"></i>Skype</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka-https-kafka-apache-org"><span class="nav-number">1.</span> <span class="nav-text">Kafka https://kafka.apache.org/</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、基本概念"><span class="nav-number">1.2.</span> <span class="nav-text">二、基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Messages-And-Batches"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 Messages And Batches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Topics-And-Partitions"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 Topics And Partitions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Producers-And-Consumers"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 Producers And Consumers</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-生产者"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">1. 生产者</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-消费者"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">2. 消费者</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Brokers-And-Clusters"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4 Brokers And Clusters</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka-特性"><span class="nav-number">1.3.</span> <span class="nav-text">kafka 特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kafka-顺序读写优势好处以及为何高性能"><span class="nav-number">1.3.1.</span> <span class="nav-text">kafka 顺序读写优势好处以及为何高性能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#zero-copy"><span class="nav-number">1.4.</span> <span class="nav-text">zero-copy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#硬件层面"><span class="nav-number">1.4.1.</span> <span class="nav-text">硬件层面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统调用层"><span class="nav-number">1.4.2.</span> <span class="nav-text">系统调用层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka-数据高可用相关"><span class="nav-number">1.5.</span> <span class="nav-text">kafka 数据高可用相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#producer-发送的数据如果保证高可用"><span class="nav-number">1.5.1.</span> <span class="nav-text">producer 发送的数据如果保证高可用 ?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cluser-内-单topic-leader不可用-如何保证topic可用"><span class="nav-number">1.5.2.</span> <span class="nav-text">cluser 内 单topic leader不可用 如何保证topic可用 ?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#consumer-消费数据如何保证消费的准确性"><span class="nav-number">1.5.3.</span> <span class="nav-text">consumer 消费数据如何保证消费的准确性</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DaiLe</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
